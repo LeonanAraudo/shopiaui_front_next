@@ -1,5 +1,3 @@
-
-
 export default function Home() {
   return (
     <div className='bg-white flex-1 items-center justify-center'>
