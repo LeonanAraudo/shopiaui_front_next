@@ -8,7 +8,7 @@ export const poppins = Poppins({
   weight: '400',
 })
 
-export default function SignUpScreen() {
+export default function SignUpScreen() {    
   return (
     <div className='bg-[url("/fundoBorrado.jpeg")] bg-cover bg-center flex items-center justify-center w-full h-screen'>
       <main className=" w-1/2 h-[400px] flex items-center justify-center flex-col">

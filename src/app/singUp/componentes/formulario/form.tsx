@@ -14,6 +14,10 @@ import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import {useForm} from 'react-hook-form'
+import { createUser } from '../../apiSU/create-user'
+import {z} from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod'
 
 export const poppins = Poppins({
   subsets: ['latin'],
@@ -53,6 +57,12 @@ const theme = createTheme({
     },
   },
 })
+const createUserForm = z.object({
+  username: z.string().min(1, 'informe a atividade que deseja realizar'),
+  password: z.string().min(1).max(8, 'Senha Invalida'),
+})
+
+type CreateUserForm = z.infer<typeof createUserForm>
 
 export default function Formulario() {
   const [showPassword, setShowPassword] = React.useState(false)
@@ -72,8 +82,19 @@ export default function Formulario() {
     event.preventDefault()
   }
 
+  const {register, handleSubmit, formState } = useForm<CreateUserForm>({
+    resolver: zodResolver(createUserForm)
+  });
+    
+  async function handleCreateUser(data: CreateUserForm) {
+    await createUser({
+      username: data.username,
+      password: data.password,
+    })
+  }
+
   return (
-    <form className="w-full flex items-center justify-center flex-col">
+    <form onSubmit={handleSubmit(handleCreateUser)} className="w-full flex items-center justify-center flex-col">
       <Box component="form" sx={{ width: '65ch', marginTop: '20px' }}>
         <ThemeProvider theme={theme}>
           <TextField
@@ -81,6 +102,7 @@ export default function Formulario() {
             color="primary"
             label="Digite seu Email"
             variant="outlined"
+            {...register('username')}
             slotProps={{
               input: {
                 sx: {
@@ -93,6 +115,11 @@ export default function Formulario() {
               },
             }}
           />
+          {formState.errors.username && (
+            <p className="text-red-400 text-sm">
+              {formState.errors.username.message}
+            </p>
+          )}
           <Box
             sx={{
               display: 'flex',
@@ -106,6 +133,7 @@ export default function Formulario() {
               <InputLabel htmlFor="senha">Senha</InputLabel>
               <OutlinedInput
                 id="senha"
+                {...register('password')}
                 type={showPassword ? 'text' : 'password'}
                 sx={{
                   backgroundColor: '#AEBFDC',
@@ -126,6 +154,11 @@ export default function Formulario() {
                 }
                 label="password"
               />
+                {formState.errors.password && (
+                <p className="text-red-400 text-sm">
+                  {formState.errors.password.message}
+                </p>
+                 )}
             </FormControl>
 
             <FormControl sx={{ width: '32ch' }} variant="outlined">
