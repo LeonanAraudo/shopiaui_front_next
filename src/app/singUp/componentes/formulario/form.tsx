@@ -181,8 +181,8 @@ export default function Formulario() {
             </Button>
           </Stack>
           <div className={poppins.className}>
-            <p className="text-center text-[#6A6A6A]">
-              Já possui conta?<span className="text-[#292929]">Entre aqui</span>
+            <p className="text-center text-[#6A6A6A] mt-2">
+              Já possui conta?<span className="text-[#292929] cursor-pointer">Entre aqui</span>
             </p>
           </div>
         </ThemeProvider>
