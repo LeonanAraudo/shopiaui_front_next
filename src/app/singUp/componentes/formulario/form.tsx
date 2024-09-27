@@ -58,9 +58,13 @@ const theme = createTheme({
   },
 })
 const createUserForm = z.object({
-  username: z.string().min(1, 'informe a atividade que deseja realizar'),
-  password: z.string().min(1).max(8, 'Senha Invalida'),
-})
+  email: z.string().email('Informe um email válido'),
+  password: z.string().min(8, 'A senha precisa ter 8 caracteres'),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  path: ['confirmPassword'],
+  message: 'As senhas não conferem',
+});
 
 type CreateUserForm = z.infer<typeof createUserForm>
 
@@ -87,22 +91,24 @@ export default function Formulario() {
   });
     
   async function handleCreateUser(data: CreateUserForm) {
+    console.log('dados recebidos',data)
     await createUser({
-      username: data.username,
-      password: data.password,
+      email: data.email,
+      password: data.password
     })
   }
 
   return (
-    <form onSubmit={handleSubmit(handleCreateUser)} className="w-full flex items-center justify-center flex-col">
-      <Box component="form" sx={{ width: '65ch', marginTop: '20px' }}>
+    <form  onSubmit={handleSubmit(handleCreateUser)}  className="w-full flex items-center justify-center flex-col">
+      <Box 
+      sx={{ width: '65ch', marginTop: '20px', display:"flex", flexDirection:"column" }}>
         <ThemeProvider theme={theme}>
           <TextField
-            id="outlined-basic"
+            id="email"
             color="primary"
             label="Digite seu Email"
             variant="outlined"
-            {...register('username')}
+            {...register('email')}
             slotProps={{
               input: {
                 sx: {
@@ -115,9 +121,9 @@ export default function Formulario() {
               },
             }}
           />
-          {formState.errors.username && (
-            <p className="text-red-400 text-sm">
-              {formState.errors.username.message}
+          {formState.errors.email && (
+            <p className="text-red-600 text-sm ml-1">
+              {formState.errors.email.message}
             </p>
           )}
           <Box
@@ -152,10 +158,10 @@ export default function Formulario() {
                     </IconButton>
                   </InputAdornment>
                 }
-                label="password"
+                label="Senha"
               />
                 {formState.errors.password && (
-                <p className="text-red-400 text-sm">
+                <p className="text-red-600 text-sm">
                   {formState.errors.password.message}
                 </p>
                  )}
@@ -165,6 +171,8 @@ export default function Formulario() {
               <InputLabel htmlFor="ConfirmarSenha">Confirmar Senha</InputLabel>
               <OutlinedInput
                 id="ConfirmarSenha"
+                {...register('confirmPassword')}
+                name='confirmPassword'
                 type={showPassword2 ? 'text' : 'password'}
                 sx={{
                   backgroundColor: '#AEBFDC',
@@ -185,6 +193,11 @@ export default function Formulario() {
                 }
                 label="Confirm Password"
               />
+               {formState.errors.confirmPassword && (
+                <p className="text-red-600 text-sm ml-1">
+                  {formState.errors.confirmPassword.message}
+                </p>
+              )}
             </FormControl>
           </Box>
           <div className="ml-2">
@@ -207,6 +220,7 @@ export default function Formulario() {
           >
             <Button
               color="secondary"
+              type='submit'
               variant="contained"
               sx={{ width: '223px', height: '4,5px' }}
             >

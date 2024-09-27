@@ -1,16 +1,22 @@
 interface UsersInfos{
-    username: string
+    email: string
     password: string
 }
-export async function createUser({username, password}: UsersInfos){
-   await fetch('http://127.0.0.1:3000/users',{
+export async function createUser({email, password }: UsersInfos){
+   const response = await fetch('https://ecoapi-hyjk.onrender.com/users',{
     method:'POST',
     headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        username,
+        email,
         password,
       }),
-   })
+    })
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(`Erro: ${errorData.message || 'Erro ao criar usuário'}`);
+    }
+      return await response.json();
+   
 }

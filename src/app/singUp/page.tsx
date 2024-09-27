@@ -13,24 +13,11 @@ export default function SignUpScreen() {
     <div className='bg-[url("/fundoBorrado.jpeg")] bg-cover bg-center flex items-center justify-center w-full h-screen'>
       <main className=" w-1/2 h-[400px] flex items-center justify-center flex-col">
         <div className={poppins.className}>
-          <p className="text-[#324C63] font-bold text-4xl">Registre-se</p>
-        </div>
-        <div>
-          <GoogleButtons/>
-        </div>
-        <div className="flex items-center justify-center flex-row gap-7">
-          <div className="bg-black w-40 h-[1px]">
-          </div>
-          <div>
-            <p>ou</p>
-          </div>
-          <div className="bg-black w-40 h-[1px]">
-          </div>
+          <p className="text-[#324C63] font-bold text-4xl mb-10">Registre-se</p>
         </div>
         <div>
           <Formulario/>
-        </div>
-       
+        </div> 
       </main>
     </div>
   )
