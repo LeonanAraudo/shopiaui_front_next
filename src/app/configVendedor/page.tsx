@@ -5,13 +5,22 @@ import Typography from '@mui/material/Typography';
 import { createTheme } from '@mui/material/styles';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import DescriptionIcon from '@mui/icons-material/Description';
 import LayersIcon from '@mui/icons-material/Layers';
 import { AppProvider } from '@toolpad/core/AppProvider';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import type { Session, Router, Navigation } from '@toolpad/core';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import AddIcon from '@mui/icons-material/Add';
+import { useMemo } from 'react';
+
+interface NavigationItem {
+  kind?: string;
+  segment?: string;
+  children?: NavigationItem[];
+}
 
 const NAVIGATION: Navigation = [
   {
@@ -33,22 +42,22 @@ const NAVIGATION: Navigation = [
   },
   {
     kind: 'header',
-    title: 'Analytics',
+    title: 'Controle de Loja',
   },
   {
-    segment: 'reports',
+    segment: 'produtos',
     title: 'Produtos',
-    icon: <BarChartIcon />,
+    icon: <LocalMallIcon />,
     children: [
       {
-        segment: 'sales',
+        segment: 'postProdutos',
         title: 'Cadastrar Produto',
         icon: <AddIcon />,
       },
       {
-        segment: 'traffic',
-        title: 'Traffic',
-        icon: <DescriptionIcon />,
+        segment: 'getProdutos',
+        title: 'Meus Produtos',
+        icon: <AutoStoriesIcon />,
       },
     ],
   },
@@ -58,6 +67,7 @@ const NAVIGATION: Navigation = [
     icon: <LayersIcon />,
   },
 ];
+
 
 const demoTheme = createTheme({
   cssVariables: {
@@ -75,7 +85,53 @@ const demoTheme = createTheme({
   },
 });
 
+function findSegment(navItems: NavigationItem[], pathname: string, parentSegment: string = ''): string | undefined {
+  console.log('findSegment chamada com pathname:', pathname);
+  const cleanPathname = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+  for (const item of navItems) {
+    const currentSegment = parentSegment ? `${parentSegment}/${item.segment}` : item.segment;
+    const cleanSegment = currentSegment?.startsWith('/') ? currentSegment.slice(1) : currentSegment;
+
+    if (cleanSegment === cleanPathname) {
+      console.log('Segmento encontrado:', item);
+      return currentSegment; 
+    }
+
+    if (item.children) {
+      const found = findSegment(item.children, pathname, currentSegment);
+      if (found) {
+        return found;
+      }
+    }
+  }
+  return undefined;
+}
+
+function exibContent({ pathname }: { pathname: string }){
+  const currentSegment = findSegment(NAVIGATION, pathname);
+  if (!currentSegment) {
+    return 'Página não encontrada'; 
+  }
+  switch(currentSegment){
+    case 'produtos/postProdutos':
+      return <div>
+          <p className='bg-white'>OLHA O CARROOOOOOOOOOOOOOOOOOOOO</p>
+      </div>
+    case 'dashboard':
+        return 'Meus Produtos';
+    case 'produtos/getProdutos':
+          return 'Meus Produtos';
+      
+      default:
+       return 'pagina não encontrada'
+
+  }
+}
+
 function DemoPageContent({ pathname }: { pathname: string }) {
+  const cleanPathname = pathname.startsWith('/') ? pathname.slice(1) : pathname;
+  const currentContent = useMemo(() => exibContent({ pathname: cleanPathname }), [cleanPathname]);
+
   return (
     <Box
       sx={{
@@ -86,16 +142,13 @@ function DemoPageContent({ pathname }: { pathname: string }) {
         textAlign: 'center',
       }}
     >
-      <Typography>Dashboard content for {pathname}</Typography>
+      <Typography>{currentContent}</Typography>
     </Box>
   );
 }
 
 interface DemoProps {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
+ 
   window?: () => Window;
 }
 
