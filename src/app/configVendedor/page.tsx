@@ -15,6 +15,13 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import AddIcon from '@mui/icons-material/Add';
 import { useMemo } from 'react';
+import FormProduto from './componentes/formProduto/post-produto';
+import { Poppins } from 'next/font/google';
+
+export const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+});
 
 interface NavigationItem {
   kind?: string;
@@ -23,10 +30,6 @@ interface NavigationItem {
 }
 
 const NAVIGATION: Navigation = [
-  {
-    kind: 'header',
-    title: 'Main items',
-  },
   {
     segment: 'dashboard',
     title: 'Dashboard',
@@ -70,19 +73,10 @@ const NAVIGATION: Navigation = [
 
 
 const demoTheme = createTheme({
-  cssVariables: {
-    colorSchemeSelector: 'data-toolpad-color-scheme',
-  },
-  colorSchemes: { light: true, dark: true },
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 600,
-      lg: 1200,
-      xl: 1536,
-    },
-  },
+  typography: {
+    fontFamily: poppins.style.fontFamily,
+},
+  
 });
 
 function findSegment(navItems: NavigationItem[], pathname: string, parentSegment: string = ''): string | undefined {
@@ -115,7 +109,7 @@ function exibContent({ pathname }: { pathname: string }){
   switch(currentSegment){
     case 'produtos/postProdutos':
       return <div>
-          <p className='bg-white'>OLHA O CARROOOOOOOOOOOOOOOOOOOOO</p>
+          <FormProduto/>
       </div>
     case 'dashboard':
         return 'Meus Produtos';
@@ -193,7 +187,7 @@ export default function DashboardLayoutBasic(props: DemoProps) {
   const demoWindow = window !== undefined ? window() : undefined;
 
   return (
-    // preview-start
+    
     <AppProvider
       session={session}
       authentication={authentication}
@@ -206,6 +200,5 @@ export default function DashboardLayoutBasic(props: DemoProps) {
         <DemoPageContent pathname={pathname} />
       </DashboardLayout>
     </AppProvider>
-    // preview-end
   );
 }

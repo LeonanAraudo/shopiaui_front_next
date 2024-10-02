@@ -57,6 +57,7 @@ const theme = createTheme({
     },
   },
 })
+
 const createUserForm = z.object({
   email: z.string().email('Informe um email válido'),
   password: z.string().min(8, 'A senha precisa ter 8 caracteres'),
@@ -116,7 +117,7 @@ export default function Formulario() {
                   width: '55ch',
                   marginLeft: '5px',
                   boxShadow:
-                    '0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.06)', // Sombra do M3
+                    '0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.06)',
                 },
               },
             }}
