@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useMemo } from 'react';
 import FormProduto from './componentes/formProduto/post-produto';
 import { Poppins } from 'next/font/google';
+import CreatedTypeProduct from './componentes/formType/post-type';
 
 export const poppins = Poppins({
   subsets: ['latin'],
@@ -112,7 +113,8 @@ function exibContent({ pathname }: { pathname: string }){
           <FormProduto/>
       </div>
     case 'dashboard':
-        return 'Meus Produtos';
+        return <CreatedTypeProduct/>;
+      
     case 'produtos/getProdutos':
           return 'Meus Produtos';
       
